@@ -25,6 +25,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/productsInHome",
+      "handler": "product.findAllInHomePage",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "POST",
       "path": "/products",
       "handler": "product.create",
