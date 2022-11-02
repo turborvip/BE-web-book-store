@@ -20,12 +20,8 @@
       "type": "string",
       "required": true
     },
-    "menu": {
-      "collection": "menu",
-      "via": "chidren"
-    },
-    "chidren": {
-      "model": "menu",
+    "categories": {
+      "collection": "category",
       "via": "menu"
     }
   }

@@ -2,52 +2,44 @@
   "kind": "collectionType",
   "collectionName": "products",
   "info": {
-    "name": "product"
+    "name": "product",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": false
   },
   "attributes": {
-    "title": {
+    "name": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true
     },
     "description": {
-      "type": "string",
-      "required": true
+      "type": "text",
+      "required": false
     },
     "price": {
-      "type": "float"
+      "type": "float",
+      "required": true
+    },
+    "quantity": {
+      "type": "integer"
     },
     "image": {
-      "model": "file",
-      "via": "related",
-      "allowedTypes": [
-        "files",
-        "images",
-        "videos"
-      ],
-      "plugin": "upload",
-      "required": true
-    },
-    "slug": {
-      "type": "uid",
-      "targetField": "title"
-    },
-    "Custom_field": {
-      "type": "component",
-      "repeatable": true,
-      "component": "custom.custom-field"
+      "type": "string"
     },
     "status": {
-      "type": "enumeration",
-      "enum": [
-        "draft",
-        "published"
-      ],
-      "default": "published",
-      "required": true
+      "type": "boolean"
+    },
+    "categories": {
+      "collection": "category",
+      "via": "products",
+      "dominant": true
+    },
+    "brand": {
+      "type": "string"
     }
   }
 }

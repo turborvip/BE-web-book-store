@@ -12,8 +12,31 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Name": {
-      "type": "string"
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "path": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "childrens": {
+      "collection": "category",
+      "via": "parent"
+    },
+    "parent": {
+      "model": "category",
+      "via": "childrens"
+    },
+    "menu": {
+      "via": "categories",
+      "model": "menu"
+    },
+    "products": {
+      "via": "categories",
+      "collection": "product"
     }
   }
 }
