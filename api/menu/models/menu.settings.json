@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "menus",
+  "info": {
+    "name": "Menu",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "path": {
+      "type": "string",
+      "required": true
+    },
+    "menu": {
+      "collection": "menu",
+      "via": "chidren"
+    },
+    "chidren": {
+      "model": "menu",
+      "via": "menu"
+    }
+  }
+}
