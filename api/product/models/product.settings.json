@@ -40,6 +40,10 @@
     },
     "brand": {
       "type": "string"
+    },
+    "sold": {
+      "type": "integer",
+      "default": 0
     }
   }
 }

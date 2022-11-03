@@ -26,8 +26,8 @@
     },
     {
       "method": "GET",
-      "path": "/productsInHome",
-      "handler": "product.findAllInHomePage",
+      "path": "/productsBestSeller",
+      "handler": "product.bestSeller",
       "config": {
         "policies": []
       }
