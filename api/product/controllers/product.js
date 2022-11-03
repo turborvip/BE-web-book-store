@@ -10,7 +10,9 @@ module.exports = {
   async findOne(ctx) {
     const { slug } = ctx.params;
 
-    const entity = await strapi.services.product.findOne({ slug });
+    const entity = await strapi
+      .query("product")
+      .model.find({ _id: slug, status: true });
     return sanitizeEntity(entity, { model: strapi.models.product });
   },
   async bestSeller(ctx) {
@@ -41,13 +43,13 @@ module.exports = {
   async productsByCategory(ctx) {
     let { slug } = ctx.params;
     const category = ctx.query.category || null;
-    const brands =ctx.query.brands || null;
+    const brands = ctx.query.brands || null;
     const priceFrom = ctx.query.priceFrom || 0;
     const priceTo = ctx.query.priceTo || 1000000;
-    const page = await parseInt(ctx.query.page) || 1;
-    const pageSize = await parseInt(ctx.query.pageSize) || 20;
-    let offset = (await (parseInt(page) - 1) * parseInt(pageSize));
-    strapi.log.debug('brands ==',brands,typeof brands)
+    const page = (await parseInt(ctx.query.page)) || 1;
+    const pageSize = (await parseInt(ctx.query.pageSize)) || 20;
+    let offset = (await (parseInt(page) - 1)) * parseInt(pageSize);
+    strapi.log.debug("brands ==", brands, typeof brands);
     let data = [];
     if (category) {
       slug = await strapi
