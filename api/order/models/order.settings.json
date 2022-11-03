@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "Order",
+  "info": {
+    "name": "Order"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "address": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "price": {
+      "type": "float"
+    },
+    "biller": {
+      "type": "json"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "boolean"
+    }
+  }
+}
