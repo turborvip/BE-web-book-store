@@ -34,7 +34,15 @@
     },
     {
       "method": "GET",
-      "path": "/productsByCategory/",
+      "path": "/productsByCategory",
+      "handler": "product.productsByCategory",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/productsByCategory/:slug",
       "handler": "product.productsByCategory",
       "config": {
         "policies": []

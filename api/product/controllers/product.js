@@ -26,7 +26,7 @@ module.exports = {
     const data = await strapi
       .query("product")
       .model.find({ status: true })
-      .select(["name", "price", "quantity", "image"])
+      .select(["name", "price", "image"])
       .limit(parseInt(pageSize))
       .skip(offset)
       .sort({ sold: "desc" });
@@ -39,26 +39,50 @@ module.exports = {
   },
 
   async productsByCategory(ctx) {
+    let { slug } = ctx.params;
     const category = ctx.query.category || null;
-    const page = parseInt(ctx.query.page) || 1;
-    const pageSize = parseInt(ctx.query.pageSize) || 20;
-    let offset = (await (parseInt(page) - 1)) * parseInt(pageSize);
-    const categoryId = await strapi
-      .query("category")
-      .model.find({ name: category, status: true })
-      .select(["id"]);
+    const brands =ctx.query.brands || null;
+    const priceFrom = ctx.query.priceFrom || 0;
+    const priceTo = ctx.query.priceTo || 1000000;
+    const page = await parseInt(ctx.query.page) || 1;
+    const pageSize = await parseInt(ctx.query.pageSize) || 20;
+    let offset = (await (parseInt(page) - 1) * parseInt(pageSize));
+    strapi.log.debug('brands ==',brands,typeof brands)
     let data = [];
-    if (categoryId[0].id) {
+    if (category) {
+      slug = await strapi
+        .query("category")
+        .model.find({ name: category, status: true })
+        .select(["id"]);
+    }
+    if (brands) {
       data = await strapi
         .query("product")
-        .model.find({ categories: { $elemMatch: { $eq: categoryId[0].id } } })
+        .model.find({
+          categories: { $elemMatch: { $eq: slug } },
+          price: { $gt: priceFrom, $lt: priceTo },
+          brand: { $in: brands },
+          status: true,
+        })
         .limit(pageSize)
         .skip(offset)
-        .select(["name", "price", "quantity", "image"])
+        .select(["name", "price", "image"])
+        .sort({ createdAt: "desc" });
+    } else {
+      data = await strapi
+        .query("product")
+        .model.find({
+          categories: { $elemMatch: { $eq: slug } },
+          price: { $gt: priceFrom, $lt: priceTo },
+          status: true,
+        })
+        .limit(pageSize)
+        .skip(offset)
+        .select(["name", "price", "image"])
         .sort({ createdAt: "desc" });
     }
     const pagination = {
-      totalPage:data.length,
+      totalPage: data.length,
       page,
       pageSize,
     };
