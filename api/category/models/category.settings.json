@@ -37,6 +37,10 @@
     "products": {
       "via": "categories",
       "collection": "product"
+    },
+    "status": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

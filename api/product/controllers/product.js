@@ -17,7 +17,7 @@ module.exports = {
     const page =  parseInt(ctx.query.page) || 1;
     const pageSize =  parseInt(ctx.query.pageSize) || 20;
 
-    const productCount = await strapi.query("product").model.count();
+    const productCount = await strapi.query("product").model.find({ status: 1 }).count();
     let offset = await (parseInt(page) - 1) * parseInt(pageSize);
     let totalPage = await Math.ceil(productCount / parseInt(pageSize));
     const data = await strapi
@@ -34,4 +34,28 @@ module.exports = {
       }
     return {data,pagination}
   },
+
+  async productsByName(ctx) {
+    const page =  parseInt(ctx.query.page) || 1;
+    const pageSize =  parseInt(ctx.query.pageSize) || 20;
+
+    const productCount = await strapi.query("product").find({ status: 1, }).model.count();
+    let offset = await (parseInt(page) - 1) * parseInt(pageSize);
+    let totalPage = await Math.ceil(productCount / parseInt(pageSize));
+    const data = await strapi
+      .query("product")
+      .model.find({ status: 1 })
+      // .select(["name", "price", "quantity", "image"])
+      // .limit(parseInt(pageSize))
+      // .skip(offset)
+      .sort({'createdAt':'desc'})
+      const pagination = {
+        totalPage,
+        page,
+        pageSize,
+      }
+    return {data,pagination}
+  },
+
+
 };

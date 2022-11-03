@@ -31,11 +31,12 @@
       "type": "string"
     },
     "status": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "categories": {
-      "collection": "category",
       "via": "products",
+      "collection": "category",
       "dominant": true
     },
     "brand": {

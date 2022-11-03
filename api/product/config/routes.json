@@ -33,6 +33,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/productsByName/:slug",
+      "handler": "product.productsByName",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "POST",
       "path": "/products",
       "handler": "product.create",
