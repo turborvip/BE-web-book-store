@@ -31,10 +31,6 @@
       "model": "category",
       "via": "childrens"
     },
-    "menu": {
-      "via": "categories",
-      "model": "menu"
-    },
     "products": {
       "via": "categories",
       "collection": "product"
