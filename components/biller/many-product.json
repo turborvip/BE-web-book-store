@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_biller_many_products",
+  "info": {
+    "name": "manyProduct",
+    "icon": "money-bill-wave",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "product": {
+      "model": "product"
+    }
+  }
+}

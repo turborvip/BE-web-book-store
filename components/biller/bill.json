@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_biller_bills",
+  "info": {
+    "name": "Bill",
+    "icon": "money-bill",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "aProduct": {
+      "type": "component",
+      "repeatable": true,
+      "component": "biller.many-product",
+      "required": true
+    }
+  }
+}
