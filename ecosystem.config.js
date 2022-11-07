@@ -16,14 +16,4 @@ module.exports = {
       NODE_ENV: 'production'
     }
   }],
-  deploy : {
-  production : {
-    user : 'node',
-    host : 'xx.xx.xx.xx',
-    ref  : 'origin/master',
-    repo : 'git@github.com:turborvip/BE-web-book-store.git',
-    path : '/var/www/production',
-    'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
-  }
-}
 }
