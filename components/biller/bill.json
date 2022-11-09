@@ -7,7 +7,7 @@
   },
   "options": {},
   "attributes": {
-    "aProduct": {
+    "products": {
       "type": "component",
       "repeatable": true,
       "component": "biller.many-product",

@@ -1,7 +1,7 @@
 {
-  "collectionName": "components_biller_many_products",
+  "collectionName": "components_biller_a_product",
   "info": {
-    "name": "manyProduct",
+    "name": "aProduct",
     "icon": "money-bill-wave",
     "description": ""
   },
@@ -9,6 +9,11 @@
   "attributes": {
     "product": {
       "model": "product"
+    },
+    "quantity": {
+      "type": "integer",
+      "max": 99,
+      "min": 1
     }
   }
 }

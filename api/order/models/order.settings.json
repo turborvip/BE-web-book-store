@@ -13,27 +13,34 @@
   "pluginOptions": {},
   "attributes": {
     "address": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "phone": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "price": {
-      "type": "float"
+      "type": "float",
+      "required": true
     },
     "description": {
-      "type": "string"
-    },
-    "status": {
-      "type": "boolean"
+      "type": "string",
+      "required": false
     },
     "bill": {
       "type": "component",
       "repeatable": false,
-      "component": "biller.bill"
+      "component": "biller.bill",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "default": "pendding"
     }
   }
 }
