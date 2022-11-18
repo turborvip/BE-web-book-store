@@ -33,6 +33,14 @@
       }
     },
     {
+      "method":"PUT",
+      "path":"/ordersStatusDone/:id",
+      "handler": "order.updateStatusDone",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PUT",
       "path": "/orders/:id",
       "handler": "order.update",

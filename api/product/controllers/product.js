@@ -41,53 +41,79 @@ module.exports = {
   },
 
   async productsByCategory(ctx) {
-    let { slug } = ctx.params;
-    const category = ctx.query.category || null;
-    const brands = ctx.query.brands || null;
-    const priceFrom = ctx.query.priceFrom || 0;
-    const priceTo = ctx.query.priceTo || 1000000;
-    const page = (await parseInt(ctx.query.page)) || 1;
-    const pageSize = (await parseInt(ctx.query.pageSize)) || 20;
-    let offset = (await (parseInt(page) - 1)) * parseInt(pageSize);
-    strapi.log.debug("brands ==", brands, typeof brands);
-    let data = [];
-    if (category) {
-      slug = await strapi
-        .query("category")
-        .model.find({ name: category, status: true })
-        .select(["id"]);
+    try {
+      let { slug } = ctx.params;
+      const category = ctx.query.category || null;
+      const brands = ctx.query.brands || null;
+      const priceFrom = ctx.query.priceFrom || 0;
+      const priceTo = ctx.query.priceTo || 1000000;
+      const page = (await parseInt(ctx.query.page)) || 1;
+      const pageSize = (await parseInt(ctx.query.pageSize)) || 20;
+      const offset = (await (parseInt(page) - 1)) * parseInt(pageSize);
+      strapi.log.debug("category ==", category);
+      let data = [];
+      let dataCount;
+      if (category) {
+        slug = await strapi
+          .query("category")
+          .model.find({ name: category, status: true })
+          .select(["id"]);
+      }
+      if (brands) {
+        data = await strapi
+          .query("product")
+          .model.find({
+            categories: { $elemMatch: { $eq: slug } },
+            price: { $gt: priceFrom, $lt: priceTo },
+            brand: { $in: brands },
+            status: true,
+          })
+          .limit(pageSize)
+          .skip(offset)
+          .select(["name", "price", "image"])
+          .sort({ createdAt: "desc" });
+
+        dataCount = await strapi
+          .query("product")
+          .model.find({
+            categories: { $elemMatch: { $eq: slug } },
+            price: { $gt: priceFrom, $lt: priceTo },
+            brand: { $in: brands },
+            status: true,
+          })
+          .countDocuments();
+      } else {
+        data = await strapi
+          .query("product")
+          .model.find({
+            categories: { $elemMatch: { $eq: slug[0]._id } },
+            price: { $gt: priceFrom, $lt: priceTo },
+            status: true,
+          })
+          .limit(pageSize)
+          .skip(offset)
+          .select(["name", "price", "image"])
+          .sort({ createdAt: "desc" });
+
+        dataCount = await strapi
+          .query("product")
+          .model.find({
+            categories: { $elemMatch: { $eq: slug[0]._id } },
+            price: { $gt: priceFrom, $lt: priceTo },
+            status: true,
+          })
+          .countDocuments();
+      }
+
+      const totalPage = await Math.ceil(dataCount / parseInt(pageSize));
+      const pagination = {
+        totalPage,
+        page,
+        pageSize,
+      };
+      return { data, pagination };
+    } catch (err) {
+      return { status: 500, err };
     }
-    if (brands) {
-      data = await strapi
-        .query("product")
-        .model.find({
-          categories: { $elemMatch: { $eq: slug } },
-          price: { $gt: priceFrom, $lt: priceTo },
-          brand: { $in: brands },
-          status: true,
-        })
-        .limit(pageSize)
-        .skip(offset)
-        .select(["name", "price", "image"])
-        .sort({ createdAt: "desc" });
-    } else {
-      data = await strapi
-        .query("product")
-        .model.find({
-          categories: { $elemMatch: { $eq: slug } },
-          price: { $gt: priceFrom, $lt: priceTo },
-          status: true,
-        })
-        .limit(pageSize)
-        .skip(offset)
-        .select(["name", "price", "image"])
-        .sort({ createdAt: "desc" });
-    }
-    const pagination = {
-      totalPage: data.length,
-      page,
-      pageSize,
-    };
-    return { data, pagination };
   },
 };
