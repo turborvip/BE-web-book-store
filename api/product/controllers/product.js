@@ -36,6 +36,7 @@ module.exports = {
       totalPage,
       page,
       pageSize,
+      totalItem: data.length,
     };
     return { data, pagination };
   },
@@ -46,19 +47,22 @@ module.exports = {
       const category = ctx.query.category || null;
       const brands = ctx.query.brands || null;
       const priceFrom = ctx.query.priceFrom || 0;
-      const priceTo = ctx.query.priceTo || 1000000;
+      const priceTo = ctx.query.priceTo || 100000000000;
       const page = (await parseInt(ctx.query.page)) || 1;
       const pageSize = (await parseInt(ctx.query.pageSize)) || 20;
       const offset = (await (parseInt(page) - 1)) * parseInt(pageSize);
       strapi.log.debug("category ==", category);
       let data = [];
       let dataCount;
+      
       if (category) {
         slug = await strapi
           .query("category")
-          .model.find({ name: category, status: true })
+          .model.findOne({ name: category, status: true })
           .select(["id"]);
+        slug = slug.id;
       }
+      strapi.log.debug("slug ==", slug);
       if (brands) {
         data = await strapi
           .query("product")
@@ -86,7 +90,7 @@ module.exports = {
         data = await strapi
           .query("product")
           .model.find({
-            categories: { $elemMatch: { $eq: slug[0]._id } },
+            categories: { $elemMatch: { $eq: slug } },
             price: { $gt: priceFrom, $lt: priceTo },
             status: true,
           })
@@ -98,11 +102,12 @@ module.exports = {
         dataCount = await strapi
           .query("product")
           .model.find({
-            categories: { $elemMatch: { $eq: slug[0]._id } },
+            categories: { $elemMatch: { $eq: slug } },
             price: { $gt: priceFrom, $lt: priceTo },
             status: true,
           })
           .countDocuments();
+        strapi.log.debug("data ==", data.length);
       }
 
       const totalPage = await Math.ceil(dataCount / parseInt(pageSize));
@@ -110,6 +115,7 @@ module.exports = {
         totalPage,
         page,
         pageSize,
+        totalItem: data.length,
       };
       return { data, pagination };
     } catch (err) {
