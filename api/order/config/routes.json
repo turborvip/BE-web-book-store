@@ -25,6 +25,22 @@
       }
     },
     {
+      "method":"GET",
+      "path":"/ordersStatusSuccess/:id",
+      "handler": "order.updateStatusSuccess",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method":"GET",
+      "path":"/ordersStatusCancel/:id",
+      "handler": "order.updateStatusCancel",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "POST",
       "path": "/orders",
       "handler": "order.create",
@@ -33,9 +49,9 @@
       }
     },
     {
-      "method":"PUT",
-      "path":"/ordersStatusDone/:id",
-      "handler": "order.updateStatusDone",
+      "method": "POST",
+      "path": "/ordersByUser",
+      "handler": "order.orderByUserID",
       "config": {
         "policies": []
       }

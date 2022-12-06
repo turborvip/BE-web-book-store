@@ -58,20 +58,86 @@ module.exports = {
       return ctx.badRequest();
     }
   },
-  async updateStatusDone(ctx) {
+
+  async updateStatusSuccess(ctx) {
     try {
       const { id } = ctx.params;
       const order = await strapi
         .query("order")
-        .model.findOneAndUpdate({ _id: id, status:{$ne:"done"} }, { status: "done" })
+        .model.findOneAndUpdate(
+          { _id: id, status: { $ne: "success" } },
+          { status: "success" }
+        )
         .select("bill");
-      const products = order.bill[0].ref.products
+      const products = order.bill[0].ref.products;
 
       for (let i = 0; i < products.length; i++) {
-        await updateSoldProduct(products[i].ref.product._id, products[i].ref.quantity);
+        await updateSoldProduct(
+          products[i].ref.product._id,
+          products[i].ref.quantity
+        );
       }
       ctx.status = 200;
       return ctx.response;
+    } catch (error) {
+      return ctx.badRequest(error);
+    }
+  },
+
+  async updateStatusCancel(ctx) {
+    try {
+      const { id } = ctx.params;
+      const order = await strapi
+        .query("order")
+        .model.findOneAndUpdate(
+          { _id: id, status: { $ne: "cancelled" } },
+          { status: "cancelled" }
+        )
+        .select("bill");
+      const products = order.bill[0].ref.products;
+
+      for (let i = 0; i < products.length; i++) {
+        await updateQuantityProduct(
+          products[i].ref.product._id,
+          0-parseInt(products[i].ref.quantity)
+        );
+      }
+      ctx.status = 200;
+      return ctx.response;
+    } catch (error) {
+      return ctx.badRequest(error);
+    }
+  },
+
+  async orderByUserID(ctx) {
+    try {
+      const { userID } = ctx.request.body;
+      const page = (await parseInt(ctx.query.page)) || 1;
+      const pageSize = (await parseInt(ctx.query.pageSize)) || 20;
+      const offset = (await (parseInt(page) - 1)) * parseInt(pageSize);
+      strapi.log.debug("userID === ", userID);
+      if (!userID) {
+        throw new NotFoundError("userID is missing");
+      }
+      const orders = await strapi
+        .query("order")
+        .model.find({ userID: { $eq: userID } })
+        .limit(pageSize)
+        .skip(offset)
+        .select(["price", "status", "createdAt", "updatedAt", "bill"]);
+
+      const dataCount = await strapi
+        .query("order")
+        .model.find({ userID: { $eq: userID } })
+        .countDocuments();
+      const totalPage = await Math.ceil(dataCount / parseInt(pageSize));
+      const pagination = {
+        totalPage,
+        page,
+        pageSize,
+        totalItem: orders.length,
+      };
+      return { data: orders, pagination };
     } catch (error) {
       return ctx.badRequest(error);
     }

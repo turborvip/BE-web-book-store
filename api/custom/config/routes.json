@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/custom/change-password",
+      "handler": "custom.changePassword",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

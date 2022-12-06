@@ -41,6 +41,9 @@
     "status": {
       "type": "string",
       "default": "pendding"
+    },
+    "userID": {
+      "type": "string"
     }
   }
 }
